@@ -82,7 +82,6 @@ def insert_record():
     return jsonify()
 
 # SQL Database
-# 5, 12.5, 25, 50, 75, 87.5, 95
 @app.route("/course-statistics", methods=['GET'])
 def course_statistics():
     subject = request.args['subject']
@@ -146,23 +145,9 @@ def course_information():
         for elem in responseXML.find('genEdCategories').findall('category'):
             data['genEdCategories'].append(elem.find('description').text)
 
-    return jsonify(data=data)
-
-@app.route("/sections", methods=['GET'])
-def sections():
-    year = request.args['year']
-    term = request.args['term']
-    subject = request.args['subject']
-    number = request.args['number']
-
-    # API
-    response = requests.get(f"https://courses.illinois.edu/cisapp/explorer/schedule/{year}/{term}/{subject}/{number}.xml")
-    responseXML = xml.etree.ElementTree.fromstring(response.text)
-    sectionElements = responseXML.find('sections').findall('section')
-
-    data = {}
-    for elem in sectionElements:
-        data[elem.attrib['crn']] = elem.text
+    data['sections'] = {}
+    for elem in responseXML.find('sections').findall('section'):
+        data['sections'][elem.attrib['crn']] = elem.text
 
     return jsonify(data=data)
 
