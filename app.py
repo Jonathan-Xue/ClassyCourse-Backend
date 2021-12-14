@@ -146,8 +146,9 @@ def course_information():
             data['genEdCategories'].append(elem.find('description').text)
 
     data['sections'] = {}
-    for elem in responseXML.find('sections').findall('section'):
-        data['sections'][elem.attrib['crn']] = elem.text
+    if elem.find('sections') != None:
+        for elem in responseXML.find('sections').findall('section'):
+            data['sections'][elem.attrib['crn']] = elem.text
 
     return jsonify(data=data)
 
