@@ -146,7 +146,7 @@ def course_information():
             data['genEdCategories'].append(elem.find('description').text)
 
     data['sections'] = {}
-    if elem.find('sections') != None:
+    if responseXML.find('sections') != None:
         for elem in responseXML.find('sections').findall('section'):
             data['sections'][elem.attrib['crn']] = elem.text
 
