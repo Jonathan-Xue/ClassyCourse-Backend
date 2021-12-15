@@ -148,7 +148,7 @@ def course_information():
     data['sections'] = {}
     if responseXML.find('sections') != None:
         for elem in responseXML.find('sections').findall('section'):
-            data['sections'][elem.attrib['crn']] = elem.text
+            data['sections'][elem.attrib['id']] = elem.text
 
     return jsonify(data=data)
 
