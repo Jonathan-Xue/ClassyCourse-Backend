@@ -58,10 +58,10 @@ def insert_record():
 
     year = request.get_json()['year']
     term = request.get_json()['term']
-    subject = request.get_json()['subject']
+    subject = request.get_json()['subject'].replace("'", "''")
     number = request.get_json()['number']
     name = request.get_json()['name']
-    instructor = request.get_json()['instructor']
+    instructor = request.get_json()['instructor'].replace("'", "''")
     sched_type = request.get_json()['sched_type']
     a_plus = request.get_json()['a+']
     a = request.get_json()['a']
@@ -125,7 +125,7 @@ def courses():
         data.append({
             'subject': subject,
             'number': elem.attrib['id'],
-            'name': elem.text,
+            'name': elem.text.replace("'", "''"),
             'avg_gpa': sqlObject.get_course_avg(subject, elem.attrib['id'], elem.text)
         })
     
