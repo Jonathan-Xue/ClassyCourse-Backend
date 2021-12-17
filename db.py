@@ -75,7 +75,6 @@ class DB:
         sum = 0
         count = 0
         for key, val in results.items():
-            assert key in GPA_MAP
             if GPA_MAP[key] != None and val != None:
                 sum += (GPA_MAP[key] * val)
                 count += val
