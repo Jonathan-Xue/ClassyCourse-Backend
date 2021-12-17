@@ -55,7 +55,7 @@ class DB:
         cursor = cnx.cursor()
 
         cursor.execute("INSERT INTO grades(year, term, subject, number, name, instructor, sched_type, a_plus, a, a_minus, b_plus, b, b_minus, c_plus, c, c_minus, d_plus, d, d_minus, f, w) " + \
-                       "VALUES ({}, '{}', '{}', {}, '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})".format(year, term, subject, number, name, instructor, sched_type, a_plus, a, a_minus, b_plus, b, b_minus, c_plus, c, c_minus, d_plus, d, d_minus, f, w))
+                       "VALUES ({}, '{}', '{}', {}, '{}', '{}', '{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})".format(year, term, subject, number, name.replace("'", "''"), instructor.replace("'", "''"), sched_type, a_plus, a, a_minus, b_plus, b, b_minus, c_plus, c, c_minus, d_plus, d, d_minus, f, w))
         
         cursor.close()
         cnx.commit()
@@ -68,7 +68,7 @@ class DB:
         # Results
         cursor.execute("SELECT SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
                        "FROM grades " + \
-                       "WHERE subject='{}' AND number={} AND name='{}'".format(subject, number, name))
+                       "WHERE subject='{}' AND number={} AND name='{}'".format(subject, number, name.replace("'", "''")))
         results = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()][0]
 
         # Calculate Average GPA
@@ -94,13 +94,13 @@ class DB:
         # Aggregate
         cursor.execute("SELECT SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
                        "FROM grades " + \
-                       "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name))
+                       "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name.replace("'", "''")))
         results['aggregate'] = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()][0]
 
         # Granular
         cursor.execute("SELECT instructor, SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
                        "FROM grades " + \
-                       "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name) + \
+                       "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name.replace("'", "''")) + \
                        "GROUP BY instructor")
         results['granular'] = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
 

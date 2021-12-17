@@ -37,8 +37,8 @@ def import_record():
         del row['YearTerm']
 
         # Necessary For Postgres: Replace ' With ''
-        row['Course Title'] = row['Course Title'].replace("'", "''")
-        row['Primary Instructor'] = row['Primary Instructor'].replace("'", "''")
+        row['Course Title'] = row['Course Title']
+        row['Primary Instructor'] = row['Primary Instructor']
     
     # Schedule Types
     for row in data:
@@ -58,10 +58,10 @@ def insert_record():
 
     year = request.get_json()['year']
     term = request.get_json()['term']
-    subject = request.get_json()['subject'].replace("'", "''")
+    subject = request.get_json()['subject']
     number = request.get_json()['number']
     name = request.get_json()['name']
-    instructor = request.get_json()['instructor'].replace("'", "''")
+    instructor = request.get_json()['instructor']
     sched_type = request.get_json()['sched_type']
     a_plus = request.get_json()['a+']
     a = request.get_json()['a']
@@ -86,7 +86,7 @@ def insert_record():
 def course_statistics():
     subject = request.args['subject']
     number = request.args['number']
-    name = request.args['name'].replace("'", "''")
+    name = request.args['name']
 
     data = sqlObject.get_course_statistics(subject, number, name)
     
@@ -126,7 +126,7 @@ def courses():
             'subject': subject,
             'number': elem.attrib['id'],
             'name': elem.text,
-            'avg_gpa': sqlObject.get_course_avg(subject, elem.attrib['id'], elem.text.replace("'", "''"))
+            'avg_gpa': sqlObject.get_course_avg(subject, elem.attrib['id'], elem.text)
         })
     
     return jsonify(data=data)
