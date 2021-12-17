@@ -86,7 +86,7 @@ def insert_record():
 def course_statistics():
     subject = request.args['subject']
     number = request.args['number']
-    name = request.args['name']
+    name = request.args['name'].replace("'", "''")
 
     data = sqlObject.get_course_statistics(subject, number, name)
     
