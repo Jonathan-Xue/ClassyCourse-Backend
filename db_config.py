@@ -29,6 +29,23 @@ SCHEDULE_TYPES = {
     'TRV': 'Travel',
 }
 
+GPA_MAP = {
+    'a_plus': 4.0,
+    'a': 4.0,
+    'a_minus': 3.67, 
+    'b_plus': 3.33,
+    'b': 3.0, 
+    'b_minus': 2.67,
+    'c_plus': 2.33,
+    'c': 2.0,
+    'c_minus': 1.67,
+    'd_plus': 1.33,
+    'd': 1.0,
+    'd_minus': 0.67,
+    'f': 0.0,
+    'w': None
+}
+
 # Database Settings
 HOST = 'localhost'
 PORT = '5432'

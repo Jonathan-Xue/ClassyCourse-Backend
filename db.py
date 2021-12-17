@@ -60,6 +60,31 @@ class DB:
         cursor.close()
         cnx.commit()
         self.cnx_pool.putconn(cnx)
+
+    def get_course_avg(self, subject, number, name):
+        cnx = self.cnx_pool.getconn()
+        cursor = cnx.cursor()
+
+        # Results
+        cursor.execute("SELECT SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
+                       "FROM grades " + \
+                       "WHERE subject='{}' AND number={} AND name='{}'".format(subject, number, name))
+        results = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()][0]
+
+        # Calculate Average GPA
+        sum = 0
+        count = 0
+        for key, val in results.items():
+            assert key in GPA_MAP
+            if GPA_MAP[key] != None and val != None:
+                sum += (GPA_MAP[key] * val)
+                count += val
+
+        cursor.close()
+        cnx.commit()
+        self.cnx_pool.putconn(cnx)
+
+        return None if count == 0 else sum / count
     
     def get_course_statistics(self, subject, number, name):
         cnx = self.cnx_pool.getconn()

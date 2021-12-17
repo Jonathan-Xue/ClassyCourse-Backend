@@ -125,7 +125,8 @@ def courses():
         data.append({
             'subject': subject,
             'number': elem.attrib['id'],
-            'name': elem.text
+            'name': elem.text,
+            'avg_gpa': sqlObject.get_course_avg(subject, elem.attrib['id'], elem.text)
         })
     
     return jsonify(data=data)
