@@ -60,16 +60,27 @@ class DB:
         cursor.close()
         cnx.commit()
         self.cnx_pool.putconn(cnx)
-
+    
     def get_course_statistics(self, subject, number, name):
         cnx = self.cnx_pool.getconn()
         cursor = cnx.cursor()
 
+        results = {}
+
+        # Aggregate
+        cursor.execute("SELECT SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
+                       "FROM grades " + \
+                       "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name))
+        results['aggregate'] = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()][0]
+
+        # Granular
         cursor.execute("SELECT instructor, SUM(a_plus) as a_plus, SUM(a) as a, SUM(a_minus) as a_minus, SUM(b_plus) as b_plus, SUM(b) as b, SUM(b_minus) as b_minus, SUM(c_plus) as c_plus, SUM(c) as c, SUM(c_minus) as c_minus, SUM(d_plus) as d_plus, SUM(d) as d, SUM(d_minus) as d_minus, SUM(f) as f, SUM(w) as w " + \
                        "FROM grades " + \
                        "WHERE subject='{}' AND number={} AND name='{}' ".format(subject, number, name) + \
                        "GROUP BY instructor")
-        results = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
+        results['granular'] = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
+
+       
 
         cursor.close()
         cnx.commit()
