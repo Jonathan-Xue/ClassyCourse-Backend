@@ -120,9 +120,13 @@ def courses():
     responseXML = xml.etree.ElementTree.fromstring(response.text)
     courseElements = responseXML.find('courses').findall('course')
 
-    data = {}
+    data = []
     for elem in courseElements:
-        data[elem.attrib['id']] = elem.text
+        data.append({
+            'subject': subject,
+            'number': elem.attrib['id'],
+            'name': elem.text
+        })
     
     return jsonify(data=data)
 
